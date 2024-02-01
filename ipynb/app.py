@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect
 import os
 from nbconvert import HTMLExporter
 import nbformat
@@ -34,6 +34,9 @@ def upload_file():
         nb_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
         notebook = nbformat.read(nb_path, as_version=4)
         (html, _) = html_exporter.from_notebook_node(notebook)
+
+        # Remove the uploaded .ipynb file
+        os.remove(file_path)
 
         # Render the HTML in the template
         return render_template('index.html', notebook_html=html)
